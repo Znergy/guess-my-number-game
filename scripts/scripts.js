@@ -1,6 +1,6 @@
 
 
-var userGuessCount = 0;
+var userGuessCount = 3;
 
 var userGuess = document.getElementById("userInput").value;
 
@@ -11,8 +11,6 @@ document.getElementById("submit").onclick=function() {
   var userGuess = document.getElementById("userInput").value;
   while (gameState) {
     if ((userGuess >= 1) && (userGuess <= 12)) {
-      // increase userGuessCount if args are met
-      userGuessCount++;
       var myNumber = generateRandomNum(1, 12);
 
       if(myNumber == userGuess) {
@@ -27,12 +25,58 @@ document.getElementById("submit").onclick=function() {
       document.getElementById("winOrLose").innerHTML = "Please enter a valid number";
       gameState = false;
     }
-    document.getElementById("userInput").innerHTML = "";
   }
+  // decrease guess count after user guesses
+  // if the guess count is within a valid range
+  if(userGuessCount <= 3 || userGuessCount >= 0) {
+    userGuessCount--;
+    checkCount(userGuessCount);
+  } else {
+    var userChoice = prompt("You have no lives left. Do you want to play again? Type yes or no.");
+    userChoice.toLowerCase();
+    userContinue(userChoice);
+  }
+}
 
+function userContinue (choice) {
+  if (choice == yes || choice == y) {
+    resetGame();
+  } else if (choice == no || choice == n) {
+    alert("Thanks for playing");
+  }
+}
+
+function resetGame () {
+  // reset text fields
+  document.getElementById("winOrLose").innerHTML = "";
+  document.getElementById("guessCount").innerHTML = "";
+
+  // reset userGuessCount to 3
+  userGuessCount = 3;
 }
 
 // This will generate a random number between two values
 function generateRandomNum (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// This will trigger when someone hits enter within the input field
+function enterIsPressed() {
+  if (event.keyCode == 13) {
+    document.getElementById("submit").click();
+  }
+}
+
+function checkCount(count) {
+  if (count == 0) {
+    // game over
+    document.getElementById("guessCount").innerHTML = "You have " + count + " guesses left.";
+    alert("Game Over!");
+  } else {
+    document.getElementById("guessCount").innerHTML = "You have " + count + " guesses left.";
+  }
+}
+
+function checkWin(count) {
+
 }
